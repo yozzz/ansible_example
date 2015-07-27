@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Takes a full backup of the database and stores it in the pg_backups_<app-name> directory on the backup volume.
+# Also syncs this backup with the appropriate Amazon S3 bucket.
+# Run this script as the postgres user.
+#
+
+DATE=`date +%Y-%m-%d_%H:%M`
+
+echo `date` - Delete old backups
+find /backup/pg_backups_{{ app_name }}/* -mtime +5 -delete
+
+echo `date` - Do a postgres database dump for {{ db_name }}
+pg_dump {{ db_name }} | gzip > /backup/pg_backups_{{ app_name }}/{{ db_name }}_dump_$DATE.gz
+
+echo `date` - Sync pg_backups with S3
+/usr/local/bin/aws s3 sync /backup/pg_backups_{{ app_name }} s3://{{ aws_s3_backup_bucket }}/{{ app_name }}_backups
+
+echo `date` - Backup complete

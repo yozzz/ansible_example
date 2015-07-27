@@ -1,0 +1,11 @@
+---
+
+- name: Create a postgres role to be owner
+  postgresql_user: name={{ deploy_user }}
+  sudo_user: postgres
+
+- name: Create a postgres database
+  postgresql_db:
+    name: "{{ db_name }}"
+    owner: "{{ deploy_user }}"
+  sudo_user: postgres

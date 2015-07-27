@@ -1,0 +1,30 @@
+---
+
+- name: Remove default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Add sitewide nginx configuration
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/conf.d/nginx.conf
+  notify: reload nginx
+
+- name: Configure nginx site
+  template:
+    src: nginx_site.j2
+    dest: /etc/nginx/sites-available/{{ app_name }}
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nginx
+
+- name: Enable nginx site
+  file:
+    src: /etc/nginx/sites-available/{{ app_name }}
+    dest: /etc/nginx/sites-enabled/{{ app_name }}
+    state: link
+
+- name: Start nginx
+  service: name=nginx state=started enabled=yes

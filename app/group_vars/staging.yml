@@ -1,0 +1,6 @@
+---
+
+rails_env: staging
+aws_s3_backup_bucket: aws-bucket-name-here
+ruby_version: 2.2.2
+domain_name: staging.example.com

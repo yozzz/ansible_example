@@ -1,0 +1,17 @@
+---
+
+- name: Remove root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no"
+  notify: restart ssh
+
+- name: Remove password SSH access
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no"
+  notify: restart ssh
+
+- name: Remove SSH X11 forwarding
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^X11Forwarding" line="X11Forwarding no"
+  notify: restart ssh
+
+- name: Change SSH port
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^Port" line="Port {{ ssh_port }}"
+  notify: restart ssh

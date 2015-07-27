@@ -1,0 +1,11 @@
+---
+
+- name: Install rails package dependencies
+  apt: name={{ item }} state=present
+  with_items: rails_dependencies
+
+- include: initialize_deployment_env.yml
+- include: install_ruby.yml
+- include: configure_unicorn.yml
+- include: configure_nginx.yml
+- include: configure_ufw.yml

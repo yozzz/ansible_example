@@ -1,0 +1,7 @@
+---
+
+- name: UFW Allow Web
+  ufw: rule=allow name="Nginx HTTP"
+
+- name: UFW Allow HTTPS
+  ufw: rule=allow name="Nginx HTTPS"

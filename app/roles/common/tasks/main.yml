@@ -1,0 +1,19 @@
+---
+
+- include: apt_repos.yml
+
+- name: Install base packages
+  apt: name={{ item }} state=present
+  with_items: packages
+
+- include: set_timezone.yml
+- include: ssh.yml
+- include: firewall.yml
+
+- name: Setup time sync script
+  copy:
+    src: update_time
+    dest: /etc/cron.daily
+    owner: root
+    group: root
+    mode: 0755

@@ -1,0 +1,25 @@
+---
+
+- name: Add deploy user
+  user:
+    name: "{{ deploy_user }}"
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    state: present
+
+- name: Add public key to deploy user
+  authorized_key:
+    user: "{{ deploy_user }}"
+    key: "{{ item }}"
+    state: present
+  with_file:
+    - ../certificates/id_rsa.pub
+
+- name: Add application directory
+  file:
+    path: "{{ sites_dir }}/{{ app_name }}"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: 0775
+    state: directory

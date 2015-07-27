@@ -1,0 +1,10 @@
+---
+
+- name: Install ufw
+  apt: name=ufw state=present
+
+- name: Allow alternate SSH port
+  ufw: rule=allow port={{ ssh_port }} proto=tcp
+
+- name: Enable ufw and turn on logging
+  ufw: logging=on state=enabled

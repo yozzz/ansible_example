@@ -1,0 +1,35 @@
+---
+
+- name: Download AWS client
+  get_url:
+    url: "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
+    dest: "/root"
+  register: awscli_download
+
+- name: Remove Previous AWS client
+  command: /bin/rm /root/awscli-bundle -rf
+  when: awscli_download|changed
+
+- name: Unzip AWS client
+  command: /usr/bin/unzip /root/awscli-bundle.zip -d /root
+  when: awscli_download|changed
+
+- name: Install AWS client
+  command: /root/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+  when: awscli_download|changed
+
+- name: Create AWS configuration directory
+  file:
+    path: /var/lib/postgresql/.aws
+    owner: postgres
+    group: postgres
+    mode: 0775
+    state: directory
+
+- name: Copy AWS configuration
+  template:
+    src: aws_credentials.j2
+    dest: /var/lib/postgresql/.aws/credentials
+    owner: postgres
+    group: postgres
+    mode: 0600

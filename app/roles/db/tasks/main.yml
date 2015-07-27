@@ -1,0 +1,17 @@
+---
+
+- name: Install postgres and additional tools
+  apt: name={{ item }} state=present
+  with_items:
+    - postgresql-9.4
+    - postgresql-contrib-9.4
+    - postgresql-server-dev-9.4
+    - libpq-dev
+    - python-psycopg2
+
+- name: Start and enable postgres
+  service: name=postgresql state=started enabled=yes
+
+- include: setup_database.yml
+#- include: aws_client.yml
+- include: backup_job.yml

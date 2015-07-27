@@ -1,0 +1,26 @@
+---
+
+- name: Create backup directory
+  file:
+    path: /backup/pg_backups_{{ app_name }}
+    owner: postgres
+    group: postgres
+    mode: 0755
+    state: directory
+
+- name: Copy backup script
+  template:
+    src: backup_script.j2
+    dest: /var/lib/postgresql/{{ db_name }}_backup_script
+    owner: postgres
+    group: postgres
+    mode: 0755
+
+- name: Setup backup cron job
+  cron:
+    # Every day 3am, 9am, 3pm UTC
+    name: "backup postgres database"
+    hour: "3,9,15"
+    minute: "0"
+    job: "~/{{ db_name }}_backup_script > ~/backup_script.log 2>&1"
+    user: postgres

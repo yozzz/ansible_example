@@ -1,0 +1,17 @@
+---
+
+- name: Configure unicorn init script
+  template:
+    src: unicorn_init.j2
+    dest: /etc/init.d/unicorn_{{ app_name }}
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Set unicorn to start on reboot
+  service: name=unicorn_{{ app_name }} enabled=yes
+
+- name: Setup log rotation
+  template:
+    src: rails_logrotate.j2
+    dest: /etc/logrotate.d/rails_{{ app_name }}

@@ -1,0 +1,12 @@
+---
+
+- name: Set configuration for example.com server
+  hosts: all
+  sudo: yes
+  remote_user: blog
+  vars_files:
+    - secrets.yml
+  roles:
+    - { role: common, tags: [ 'common' ] }
+    - { role: db, tags: [ 'db' ] }
+    - { role: web, tags: [ 'web' ] }
