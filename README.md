@@ -1,7 +1,7 @@
 sudo apt-get install ansible
 -
 cd ansible_example/
-ansible-playbook bootstrap.yml
+ansible-playbook bootstrap.yml || ansible-playbook -i hosts bootstrap.yml
 -
 cd app/
 ansible-playbook site.yml -i production -K --ask-vault-pass
